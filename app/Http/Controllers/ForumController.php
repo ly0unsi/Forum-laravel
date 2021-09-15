@@ -8,14 +8,19 @@ use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Image;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 
 class ForumController extends Controller
 {
     public function __construct()
     {
+
         $this->middleware('auth')->except('index', 'show', 'showProfile');
+        $default = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtNWVnKZZfy-1CLo75eO5vLhTWFZyeyc7QaI6GgdSalXDIJOCA6t0DSdDDMabrTOdjdYs&usqp=CAU";
+        View::share('default', $default);
     }
     /**
      * Display a listing of the resource.
@@ -147,6 +152,7 @@ class ForumController extends Controller
     public function destroy($tid)
     {
         Topic::destroy($tid);
+        return redirect('/');
     }
     public function showProfile(User $user)
     {
@@ -156,18 +162,39 @@ class ForumController extends Controller
     }
     public function editprofile(Request $request, User $user)
     {
-        $data = $request->validate(
+        $request->validate(
             [
                 'name' => 'required|min:4',
                 'email' => 'required|email',
             ]
         );
-        $bio = $request->validate([
-            'bio' => 'required'
-        ]);
+        $bio = $request->validate([]);
 
-        $user->profile()->update($bio);
-        $user->update($data);
+        if (request('profilePic')) {
+            $profilePic = $request->profilePic->getClientOriginalName();
+            $request->profilePic->storeAs('profilePics', $profilePic, 'public');
+        }
+
+        $userData = [
+            'name' => $request->name,
+            'email' => $request->email,
+
+        ];
+        if (request('profilePic')) {
+            $profileData = [
+                'bio' => $request->bio,
+                'profilePic' => $profilePic
+
+            ];
+        } else {
+            $profileData = [
+                'bio' => $request->bio,
+
+
+            ];
+        };
+        $user->profile()->update($profileData);
+        $user->update($userData);;
         Session::flash('success', 'Votre profile est modifié avec succés');
         return redirect('profile/' . $user->id);
     }

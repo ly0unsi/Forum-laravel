@@ -30,9 +30,15 @@
         <div class="card mb-2">
             <div class="card-body p-2 p-sm-3">
                 <div class="media forum-item">
-                    <a href="{{url('profile/'.$topic->user->id)}}"><img
-                            src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle"
-                            width="50" alt="User" /></a>
+                    <a href="{{url('profile/'.$topic->user->id)}}">
+                        @if($topic->user->profile['profilePic']!==$default)
+                        <img src="{{url('/storage/profilePics/'.$topic->user->profile['profilePic'])}}"
+                            class="mr-3 rounded-circle" width="50" alt="User" />
+                        @else
+                        <img style="border: solid #f8f9fa 2px" src="{{$default}}" class="rounded-circle move" width="50"
+                            alt="User" />
+                        @endif
+                    </a>
                     <div class="media-body">
                         <h6><a href="{{url('topics/'.$topic->tid)}}" data-target=".forum-content"
                                 class="text-body">{{$topic->title}}</a></h6>

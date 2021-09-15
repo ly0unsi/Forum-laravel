@@ -61,9 +61,17 @@
                 @else
                 <li style="border-radius: 15px"
                     class="nav-item show dropdown p-0 d-flex btn btn-sm btn-outline-dark notify pl-1">
-                    <a href="{{url('profile/'.Auth::user()->id)}}"><img style="border: solid #f8f9fa 2px"
-                            src="https://bootdey.com/img/Content/avatar/avatar6.png" class="rounded-circle move"
-                            width="35" alt="User" /></a>
+                    <a href="{{url('profile/'.Auth::user()->id)}}">
+
+                        @if(Auth::user()->profile['profilePic']!==$default)
+                        <img style="border: solid #f8f9fa 2px"
+                            src="{{url('/storage/profilePics/'.Auth::user()->profile['profilePic'])}}"
+                            class="rounded-circle move" width="35" alt="User" />
+                        @else
+                        <img style="border: solid #f8f9fa 2px" src="{{$default}}" class="rounded-circle move" width="35"
+                            alt="User" />
+                        @endif
+                    </a>
                     <a style="font-weight: 500;color:#2b2b2b;dispaly:none" id="navbarDropdown" class="hidden nav-link "
                         href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                         {{ Auth::user()->name }}

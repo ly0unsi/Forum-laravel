@@ -18,9 +18,15 @@
         <div class="card mb-2">
             <div class="card-body p-2 p-sm-3">
                 <div class="media forum-item">
-                    <a href="{{url('profile/'.$topic->user->id)}}"><img
-                            src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle"
-                            width="50" alt="User" /></a>
+                    <a href="{{url('profile/'.$topic->user->id)}}">
+                        @if($topic->user->profile['profilePic']!==$default)
+                        <img src="{{url('/storage/profilePics/'.$topic->user->profile['profilePic'])}}"
+                            class="mr-3 rounded-circle" width="50" alt="User" />
+                        @else
+                        <img style="border: solid #f8f9fa 2px" src="{{$default}}" class="rounded-circle move" width="50"
+                            alt="User" />
+                        @endif
+                    </a>
                     <div class="media-body">
                         <div style="margin-left:0px;align-items:center;align-items:baseline;" class="row">
                             <h6><a href="#" data-toggle="collapse" data-target=".forum-content"
@@ -43,7 +49,8 @@
                         @if ($topic->image)
                         <p>
                             <a href="#">
-                                <img id="imgtab" class='small' src="{{url('/storage/images/'.$topic->image)}}">
+                                <img id="imgtab" style="object-fit: cover" class='small'
+                                    src="{{url('/storage/images/'.$topic->image)}}">
                             </a>
                         </p>
                         @endif
@@ -66,9 +73,15 @@
         <div class="card mb-2 ml-4">
             <div class="card-body p-2 p-sm-3">
                 <div class="media forum-item">
-                    <a href="{{url('profile/'.$comment->user->id)}}"><img
-                            src="https://bootdey.com/img/Content/avatar/avatar4.png" class="mr-3 rounded-circle"
-                            width="50" alt="User" /></a>
+                    <a href="{{url('profile/'.$comment->user->id)}}">
+                        @if($comment->user->profile['profilePic']!==$default)
+                        <img src="{{url('/storage/profilePics/'.$comment->user->profile['profilePic'])}}"
+                            class="mr-3 rounded-circle" width="50" alt="User" />
+                        @else
+                        <img style="border: solid #f8f9fa 2px" src="{{$default}}" class="rounded-circle move" width="35"
+                            alt="User" />
+                        @endif
+                    </a>
                     <div class="media-body">
                         <div style="margin-left:0px;align-items:center;align-items:baseline;" class="row">
                             <h6><a href="#" data-toggle="collapse" data-target=".forum-content"
@@ -113,9 +126,15 @@
                             <div class="card mb-2 ml-4">
                                 <div class="card-body p-2 p-sm-3">
                                     <div class="media forum-item">
-                                        <a href="{{url('profile/'.$reply->user->id)}}"><img
-                                                src="https://bootdey.com/img/Content/avatar/avatar4.png"
-                                                class="mr-3 rounded-circle" width="50" alt="User" /></a>
+                                        <a href="{{url('profile/'.$reply->user->id)}}">
+                                            @if($reply->user->profile['profilePic']!==$default)
+                                            <img src="{{url('/storage/profilePics/'.$reply->user->profile['profilePic'])}}"
+                                                class="mr-3 rounded-circle" width="50" alt="User" />
+                                            @else
+                                            <img style="border: solid #f8f9fa 2px" src="{{$default}}"
+                                                class="rounded-circle move" width="35" alt="User" />
+                                            @endif
+                                        </a>
                                         <div class="media-body">
                                             <div style="margin-left:0px;align-items:center;align-items:baseline;"
                                                 class="row">
@@ -244,7 +263,7 @@
 function res() {
     currentWindowSize = $window.width();
 
-//set flag string to LOW if...    
+//set flag string to LOW if...
 if (currentWindowSize <= 999) {
     flagIs = "low";
 }
@@ -258,17 +277,17 @@ if (flagIs != flagWas)
         // if new string is low - so change css to low setting
        if (flagIs == 'high') {
         var small={width: "140px",height: "140px"};
-        var large={width: "700px",height: "700px"};
-        var count=1; 
-        $("#imgtab").css(small).on('click',function () { 
+        var large={width: "700px",height: "700px",};
+        var count=1;
+        $("#imgtab").css(small).on('click',function () {
             $(this).animate((count==1)?large:small);
             count = 1-count;
         });
        }  else if (flagIs == 'low') {
         var small={width: "140px",height: "140px"};
         var large={width: "258px",height: "258px"};
-        var count=1; 
-        $("#imgtab").css(small).on('click',function () { 
+        var count=1;
+        $("#imgtab").css(small).on('click',function () {
             $(this).animate((count==1)?large:small);
             count = 1-count;
         });
@@ -280,7 +299,7 @@ res();
 
 // the same function will be execute each time we resize window
 $(window).resize(function () {
-   res(); 
+   res();
 });
     });
 

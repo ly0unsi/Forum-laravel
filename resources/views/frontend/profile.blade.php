@@ -23,8 +23,14 @@
                 <div class="panel-body ml-0 row col-md-12">
                     <div class="col-md-2" style="text-align: center">
                         <div class="profile-avatar relative">
-                            <img class="img-responsive" width="120"
-                                src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="profile picture">
+                            @if($user->profile['profilePic']!==$default)
+                            <img src="{{url('/storage/profilePics/'.$user->profile['profilePic'])}}"
+                                class="mr-3 rounded-circle" width="120" alt="User" />
+                            @else
+                            <img style="border: solid #f8f9fa 2px" src="{{$default}}" width="120"
+                                class="rounded-circle move" alt=" User" />
+                            @endif
+
                         </div>
                     </div>
                     <div class="col-md-10">
@@ -70,9 +76,15 @@
             <div class="card mb-2">
                 <div class="card-body p-2 p-sm-3">
                     <div class="media forum-item">
-                        <a href="{{url('profile/'.$topic->user->id)}}"><img
-                                src="https://bootdey.com/img/Content/avatar/avatar6.png" class="mr-3 rounded-circle"
-                                width="50" alt="User" /></a>
+                        <a href="{{url('profile/'.$topic->user->id)}}">
+                            @if($topic->user->profile['profilePic']!==$default)
+                            <img src="{{url('/storage/profilePics/'.$topic->user->profile['profilePic'])}}"
+                                class="mr-3 rounded-circle" width="50" alt="User" />
+                            @else
+                            <img style="border: solid #f8f9fa 2px" src="{{$default}}" width="50"
+                                class="rounded-circle move" alt=" User" />
+                            @endif
+                        </a>
                         <div class="media-body">
                             <h6><a href="{{url('topics/'.$topic->tid)}}" data-target=".forum-content"
                                     class="text-body">{{$topic->title}}</a></h6>
@@ -110,26 +122,38 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <div class="col-md-1" style="text-align: center">
-                                <div class="profile-avatar relative">
-                                    <img id="output2" class="img-responsive rounded-circle" width="120">
+                            <div class="col-md-1" style="text-align: center;width:100%">
+
+                                <div class="relative d-flex">
+                                    @if($user->profile['profilePic']!==$default)
+                                    <img id="output2"
+                                        src="{{url('/storage/profilePics/'.$user->profile['profilePic'])}}"
+                                        class="img-responsive rounded-circle border border-danger"
+                                        style="object-fit: cover" width="70">
+                                    @else
+                                    <img id="output2" src="{{$default}}" class="img-responsive rounded-circle v"
+                                        style="object-fit: cover" width="70">
+
+                                    @endif
+                                    <label
+                                        style=" color: rgb(235, 235, 235);text-decoration:none;position:absolute;bottom:12px;left:18px"
+                                        class="btn btn-sm btn-danger ml-1 p-0 px-1">
+                                        Change
+                                        <input type="file" accept="image/*" name="profilePic" id="file2"
+                                            onchange="loadFil(event)" style="display: none;">
+                                    </label>
                                 </div>
-                                <label style=" color: rgb(235, 235, 235);text-decoration:none"
-                                    class=" btn btn-sm btn-danger p-0 px-1">
-                                    Change
-                                    <input type="file" accept="image/*" name="image" id="file" onchange="loadFil(even)"
-                                        style="display: none;">
-                                </label>
+
+
                             </div>
                             <label for="threadTitle">Username</label>
                             <input type="text" name="name" value="{{$user->name}}" class="form-control @error('name') is-invalid
                                     @enderror" id="threadTitle" placeholder="Entrer le titre du topic" autofocus="" />
                             <label for="threadTitle">Email</label>
                             <input type="email" value="{{$user->email}}"
-                                class="form-control summernote  @error('email') is-invalid @enderror"
-                                name="email"></input>
+                                class="form-control summernote  @error('email') is-invalid @enderror" name="email">
                             <label for="threadTitle">Bio</label>
-                            <textarea rows="8" type="bio"
+                            <textarea rows="5" type="bio"
                                 class="form-control summernote  @error('bio') is-invalid @enderror" name="bio">
                             {{$user->profile->bio ?? 'This is your bio'}}
                         </textarea>
@@ -148,9 +172,9 @@
     </div>
 </div>
 <script>
-    var loadFil = function(even) {
+    var loadFil = function(event) {
           var image2 = document.getElementById('output2');
-          image2.src = URL.createObjectURL(even.target.files[0]);
+          image2.src = URL.createObjectURL(event.target.files[0]);
       };
 </script>
 @endsection
